@@ -6,34 +6,22 @@ const {
   sendResponse,
 } = require("../helpers/utils.helper");
 
+const { uploadFile } = require("../helpers/s3.helper");
+
 const mediaController = {};
 
 mediaController.create = catchAsync(async (req, res, next) => {
-  console.log('Hi');
-  console.log('Hi', req.file);
-
+  const file = req.file
+  const result = await uploadFile(file)
+  const media = Media.create({ url: result.Location })
   return sendResponse(
     res,
     201,
     true,
-    { foo: 'bar', spam: 'ham' },
+    { media },
     null,
     "Media created.",
   );
 })
-
-mediaController.list = catchAsync(async (req, res, next) => {
-  const medias = Media.find({})
-
-  return sendResponse(
-    res,
-    201,
-    true,
-    medias,
-    null,
-    "Medias",
-  );
-})
-
 
 module.exports = mediaController;

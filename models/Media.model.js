@@ -1,19 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const mediaSchema = Schema(
   {
     owner: {
       ref: "User",
-      required: true,
+      // required: true,
       type: Schema.Types.ObjectId,
     },
+    url: { type: String, unique: false, default: "" },
     caption: { type: String, unique: false, default: "" },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     reactions: [{ type: Schema.Types.ObjectId, ref: "Reaction" }],
+    questions: [{ type: Schema.Types.ObjectId, ref: "Question" }],
   },
   {
     timestamps: true,

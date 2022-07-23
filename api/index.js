@@ -7,4 +7,7 @@ router.use('/users', usersRouter)
 const mediaRouter = require("./medias.api")
 router.use('/medias', mediaRouter)
 
+const questionRouter = require("./questions.api")
+router.use('/questions', questionRouter)
+
 module.exports = router
