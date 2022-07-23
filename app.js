@@ -39,5 +39,30 @@ app.use("/foo", (req, res, next) => {
   res.send({ foo: "bar" });
 });
 
+const utilsHelper = require("./helpers/utils.helper");
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.log("ERROR", err);
+  if (err.isOperational) {
+    return utilsHelper.sendResponse(
+      res,
+      err.statusCode ? err.statusCode : 500,
+      false,
+      null,
+      { message: err.message },
+      err.errorType,
+    );
+  } else {
+    return utilsHelper.sendResponse(
+      res,
+      err.statusCode ? err.statusCode : 500,
+      false,
+      null,
+      { message: err.message },
+      "Internal Server Error",
+    );
+  }
+});
 
 module.exports = app;
