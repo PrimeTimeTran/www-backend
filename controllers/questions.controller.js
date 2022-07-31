@@ -7,12 +7,10 @@ const {
 } = require("../helpers/utils.helper");
 
 
-const { uploadFile } = require("../helpers/s3.helper");
-
 const questionController = {};
 
-questionController.create = catchAsync(async (req, res, next) => {
-  
+questionController.list = catchAsync(async (req, res, next) => {
+
   return sendResponse(
     res,
     201,
@@ -24,4 +22,4 @@ questionController.create = catchAsync(async (req, res, next) => {
 })
 
 
-module.exports = questionController;
+module.exports = questionController

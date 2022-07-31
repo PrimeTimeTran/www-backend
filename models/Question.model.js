@@ -22,5 +22,5 @@ const questionSchema = Schema(
   },
 );
 
-const Media = mongoose.model("Media", questionSchema)
-module.exports = Media;
+const Question = mongoose.model("Question", questionSchema)
+module.exports = Question;

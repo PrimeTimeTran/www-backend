@@ -1,8 +1,9 @@
 const fs = require('fs')
-
+const path = require('path');
+const multer = require('multer')
 const S3 = require('aws-sdk/clients/s3')
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 
 const s3Helper = {}
 
@@ -17,11 +18,6 @@ const s3 = new S3({
   secretAccessKey
 })
 
-const client = new S3Client({
-  region,
-  accessKeyId,
-  secretAccessKey
-});
 
 s3Helper.uploadFile = (file) => {
   const fileStream = fs.createReadStream(file.path)
@@ -35,16 +31,29 @@ s3Helper.uploadFile = (file) => {
   return s3.upload(uploadParams).promise()
 }
 
-s3Helper.getFileStream = async (fileKey) => {
-  const objectParams = {
-    Key: fileKey,
-    Bucket: bucketName
+const videoStorage = multer.diskStorage({
+  destination: 'videos', // Destination to store video 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '_' + Date.now()
+      + path.extname(file.originalname))
   }
+});
 
-  const command = new GetObjectCommand(objectParams);
-  const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+const videoUpload = multer({
+  storage: videoStorage,
+  limits: {
+    fileSize: 10000000
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) {
+      return cb(new Error('Please upload a video'))
+    }
+    cb(undefined, true)
+  }
+})
 
-  return url
-}
+s3Helper.videoUpload = videoUpload
+s3Helper.unlinkFile = unlinkFile
+
 
 module.exports = s3Helper;
