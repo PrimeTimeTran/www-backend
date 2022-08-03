@@ -29,19 +29,15 @@ mongoose
     console.log({ e });
   });
 
-
-// http://localhost:3000/api
 const indexRouter = require("./api/index");
 app.use("/api", indexRouter);
 
-// http://localhost:3000/foo
 app.use("/foo", (req, res, next) => {
   res.send({ foo: "bar" });
 });
 
 const utilsHelper = require("./helpers/utils.helper");
 
-// Error handling
 app.use((err, req, res, next) => {
   console.log("ERROR", err);
   if (err.isOperational) {
