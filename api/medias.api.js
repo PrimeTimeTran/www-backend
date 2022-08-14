@@ -5,6 +5,7 @@ const { videoUpload } = require('../helpers/s3.helper')
 
 const mediaController = require('../controllers/medias.controller')
 
+router.get("/", mediaController.getAll)
 router.post("/", videoUpload.single('media'), mediaController.create)
 
 module.exports = router

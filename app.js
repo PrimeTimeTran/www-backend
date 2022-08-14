@@ -18,6 +18,7 @@ app.use(cors());
 
 const mongoose = require("mongoose");
 const MONGODB_URI = process.env.MONGODB_URI;
+
 mongoose
   .connect(MONGODB_URI, {
     useUnifiedTopology: true,
@@ -30,6 +31,7 @@ mongoose
   });
 
 const indexRouter = require("./api/index");
+
 app.use("/api", indexRouter);
 
 app.use("/foo", (req, res, next) => {
